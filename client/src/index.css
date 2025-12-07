@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-white font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+.glass-panel {
+  @apply bg-dark-card/60 backdrop-blur-md border border-white/10 rounded-xl;
+}
+
+.neon-button {
+  @apply px-6 py-2 rounded-lg font-bold transition-all duration-300 transform hover:scale-105;
+}
+
+.neon-button-primary {
+  @apply bg-neon-green text-black hover:shadow-[0_0_20px_rgba(57,255,20,0.6)];
+}
+
+.neon-button-secondary {
+  @apply border border-neon-purple text-neon-purple hover:bg-neon-purple hover:text-white hover:shadow-[0_0_20px_rgba(188,19,254,0.6)];
+}
