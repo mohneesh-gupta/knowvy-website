@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 
 // Middleware to check if user is organization
 const requireOrganization = asyncHandler(async (req, res, next) => {
-    if (req.user && req.user.role === 'organization') {
+    if (req.user && req.userType === 'organization') {
         next();
     } else {
         res.status(403);
@@ -12,7 +12,7 @@ const requireOrganization = asyncHandler(async (req, res, next) => {
 
 // Middleware to check if user is mentor
 const requireMentor = asyncHandler(async (req, res, next) => {
-    if (req.user && req.user.role === 'mentor') {
+    if (req.user && req.userType === 'mentor') {
         next();
     } else {
         res.status(403);
@@ -22,7 +22,7 @@ const requireMentor = asyncHandler(async (req, res, next) => {
 
 // Middleware to check if user is organization OR mentor
 const requireOrganizationOrMentor = asyncHandler(async (req, res, next) => {
-    if (req.user && (req.user.role === 'organization' || req.user.role === 'mentor')) {
+    if (req.user && (req.userType === 'organization' || req.userType === 'mentor' || req.userType === 'admin')) {
         next();
     } else {
         res.status(403);
@@ -32,7 +32,7 @@ const requireOrganizationOrMentor = asyncHandler(async (req, res, next) => {
 
 // Middleware to check if user is admin (already exists in authMiddleware, but included for completeness)
 const requireAdmin = asyncHandler(async (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.userType === 'admin') {
         next();
     } else {
         res.status(403);

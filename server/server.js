@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import aiRoutes from "./routes/aiRoutes.js";
 
 import authRoutes from './routes/authRoutes.js';
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use("/api/ai", aiRoutes);
 
 import hostRoutes from './routes/hostRoutes.js';
 import mentorRoutes from './routes/mentorRoutes.js';
