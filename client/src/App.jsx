@@ -23,6 +23,7 @@ import EditProfile from './pages/EditProfile';
 import MyEvents from './pages/MyEvents';
 
 import Chat from './components/Chat';
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-neon-blue/20 blur-[120px] rounded-full pointer-events-none translate-x-1/2 translate-y-1/2" />
 
           <Navbar />
+          <AppRoutes />
           <div className="relative z-10 px-4 py-8 max-w-7xl mx-auto flex-grow w-full">
             <Routes>
               <Route path="/" element={<Home />} />
