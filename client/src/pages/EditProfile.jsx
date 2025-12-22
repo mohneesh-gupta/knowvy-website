@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { User, Mail, Phone, BookOpen, FileText, Code, Upload } from 'lucide-react';
+import { User, Mail, Phone, BookOpen, FileText, Code, Upload, Briefcase } from 'lucide-react';
 
 const EditProfile = () => {
     const { user, setUser } = useContext(AuthContext);
@@ -16,7 +16,13 @@ const EditProfile = () => {
         college: '',
         skills: '',
         avatar: '',
-        password: ''
+        password: '',
+        // Role specific
+        orgName: '',
+        location: '',
+        occupation: '',
+        experienceYears: '',
+        specialtyField: ''
     });
     const [avatarPreview, setAvatarPreview] = useState('');
     const [loading, setLoading] = useState(false);
@@ -33,7 +39,13 @@ const EditProfile = () => {
                 college: user.college || '',
                 skills: user.skills ? user.skills.join(', ') : '',
                 avatar: user.avatar || '',
-                password: ''
+                password: '',
+                // Role specific
+                orgName: user.orgName || '',
+                location: user.location || '',
+                occupation: user.occupation || '',
+                experienceYears: user.experienceYears || '',
+                specialtyField: user.specialtyField || ''
             });
             setAvatarPreview(user.avatar || '');
         }
@@ -79,7 +91,13 @@ const EditProfile = () => {
                 phone: formData.phone,
                 college: formData.college,
                 skills: skillsArray,
-                avatar: formData.avatar
+                avatar: formData.avatar,
+                // Role specific
+                orgName: formData.orgName,
+                location: formData.location,
+                occupation: formData.occupation,
+                experienceYears: formData.experienceYears,
+                specialtyField: formData.specialtyField
             };
 
             // Only include password if it's not empty
@@ -189,6 +207,20 @@ const EditProfile = () => {
                         </div>
                     </div>
 
+                    {/* Bio */}
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-medium text-gray-400">Bio</label>
+                        <div className="relative">
+                            <FileText className="absolute left-3 top-3 text-gray-500" size={18} />
+                            <textarea
+                                value={formData.bio}
+                                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                                className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white h-24 resize-none"
+                                placeholder="Tell us about yourself..."
+                            />
+                        </div>
+                    </div>
+
                     {/* Phone */}
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-400">Phone</label>
@@ -203,48 +235,123 @@ const EditProfile = () => {
                         </div>
                     </div>
 
-                    {/* College */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-400">College/Organization</label>
-                        <div className="relative">
-                            <BookOpen className="absolute left-3 top-3 text-gray-500" size={18} />
-                            <input
-                                type="text"
-                                value={formData.college}
-                                onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                                className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
-                            />
-                        </div>
-                    </div>
-                </div>
+                    {/* Role Specific Fields */}
+                    {user.userType === 'student' && (
+                        <>
+                            {/* College */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">College *</label>
+                                <div className="relative">
+                                    <BookOpen className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.college}
+                                        onChange={(e) => setFormData({ ...formData, college: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                            {/* Skills */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Skills (comma-separated)</label>
+                                <div className="relative">
+                                    <Code className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.skills}
+                                        onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+                                        placeholder="e.g., React, Node.js, Python"
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
 
-                {/* Bio */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-400">Bio</label>
-                    <div className="relative">
-                        <FileText className="absolute left-3 top-3 text-gray-500" size={18} />
-                        <textarea
-                            value={formData.bio}
-                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                            rows="4"
-                            className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white resize-none"
-                        ></textarea>
-                    </div>
-                </div>
+                    {user.userType === 'organization' && (
+                        <>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Organization Name *</label>
+                                <div className="relative">
+                                    <BookOpen className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.orgName} // Ensure you add orgName to initial state
+                                        onChange={(e) => setFormData({ ...formData, orgName: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Location *</label>
+                                <div className="relative">
+                                    <BookOpen className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.location} // Ensure you add location to initial state
+                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
 
-                {/* Skills */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-400">Skills (comma-separated)</label>
-                    <div className="relative">
-                        <Code className="absolute left-3 top-3 text-gray-500" size={18} />
-                        <input
-                            type="text"
-                            value={formData.skills}
-                            onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-                            placeholder="e.g., React, Node.js, Python"
-                            className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
-                        />
-                    </div>
+                    {user.userType === 'mentor' && (
+                        <>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Occupation *</label>
+                                <div className="relative">
+                                    <Briefcase className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.occupation} // Ensure occupation in state
+                                        onChange={(e) => setFormData({ ...formData, occupation: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Specialty Field *</label>
+                                <div className="relative">
+                                    <Code className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.specialtyField}
+                                        onChange={(e) => setFormData({ ...formData, specialtyField: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Experience (Years) *</label>
+                                <div className="relative">
+                                    <Briefcase className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="number"
+                                        value={formData.experienceYears} // Ensure experienceYears in state
+                                        onChange={(e) => setFormData({ ...formData, experienceYears: e.target.value })}
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                            {/* Skills for Mentor too */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-400">Skills (comma-separated)</label>
+                                <div className="relative">
+                                    <Code className="absolute left-3 top-3 text-gray-500" size={18} />
+                                    <input
+                                        type="text"
+                                        value={formData.skills}
+                                        onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+                                        placeholder="e.g., Leadership, Engineering"
+                                        className="w-full bg-dark-bg border border-white/10 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:border-neon-purple transition-colors text-white"
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
+
                 </div>
 
                 {/* Password */}

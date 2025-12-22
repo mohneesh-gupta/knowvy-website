@@ -96,49 +96,49 @@ export const AuthProvider = ({ children }) => {
   /**
    * Signup
    */
-const signup = async (
-  name,
-  email,
-  password,
-  userType,
-  phone,
-  college,
-  bio,
-  skills,
-  avatar,
-  ...otherFields
-) => {
-  try {
-    const { data } = await axios.post(
-      "http://localhost:5000/api/auth/signup",
-      {
-        name,
-        email,
-        password,
-        userType,
-        phone,
-        college,
-        bio,
-        skills,
-        avatar,
-        ...otherFields,
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
+  const signup = async (
+    name,
+    email,
+    password,
+    userType,
+    phone,
+    college,
+    bio,
+    skills,
+    avatar,
+    ...otherFields
+  ) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        {
+          name,
+          email,
+          password,
+          userType,
+          phone,
+          college,
+          bio,
+          skills,
+          avatar,
+          ...Object.assign({}, ...otherFields),
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-    localStorage.setItem("user", JSON.stringify(data));
-    setUser(data);
-    setupAutoLogout(data.token);
-  } catch (error) {
-    // 🔴 THIS LINE IS IMPORTANT
-    throw error.response?.data?.message || "Signup failed";
-  }
-};
+      localStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
+      setupAutoLogout(data.token);
+    } catch (error) {
+      // 🔴 THIS LINE IS IMPORTANT
+      throw error.response?.data?.message || "Signup failed";
+    }
+  };
 
 
   return (
     <AuthContext.Provider
-      value={{ user, login, signup, logout, loading }}
+      value={{ user, setUser, login, signup, logout, loading }}
     >
       {children}
     </AuthContext.Provider>

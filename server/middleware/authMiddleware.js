@@ -8,7 +8,10 @@ import Mentor from '../models/Mentor.js';
 const protect = asyncHandler(async (req, res, next) => {
     let token;
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')
+    ) {
         try {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -41,7 +44,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
             req.user = user;
             req.userType = userType;
-            next();
+            return next(); // ✅ explicit return
         } catch (error) {
             console.error(error);
             res.status(401);
@@ -49,14 +52,13 @@ const protect = asyncHandler(async (req, res, next) => {
         }
     }
 
-    if (!token) {
-        res.status(401);
-        throw new Error('Not authorized, no token');
-    }
+    // 🔒 No token present
+    res.status(401);
+    throw new Error('Not authorized, no token');
 });
 
 const admin = (req, res, next) => {
-    if (req.userType && req.userType === 'admin') {
+    if (req.userType === 'admin') {
         next();
     } else {
         res.status(401);
