@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext';
 import { User, Mail, Phone, BookOpen, FileText, Code, Upload, Briefcase } from 'lucide-react';
 
 const EditProfile = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, setUser, fetchProfile } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -32,22 +32,22 @@ const EditProfile = () => {
     useEffect(() => {
         if (user) {
             setFormData({
-                name: user.name || '',
-                email: user.email || '',
-                bio: user.bio || '',
-                phone: user.phone || '',
-                college: user.college || '',
-                skills: user.skills ? user.skills.join(', ') : '',
-                avatar: user.avatar || '',
+                name: user?.name || '',
+                email: user?.email || '',
+                bio: user?.bio || '',
+                phone: user?.phone || '',
+                college: user?.college || '',
+                skills: Array.isArray(user?.skills) ? user.skills.join(', ') : (typeof user?.skills === 'string' ? user.skills : ''),
+                avatar: user?.avatar || '',
                 password: '',
                 // Role specific
-                orgName: user.orgName || '',
-                location: user.location || '',
-                occupation: user.occupation || '',
-                experienceYears: user.experienceYears || '',
-                specialtyField: user.specialtyField || ''
+                orgName: user?.orgName || '',
+                location: user?.location || '',
+                occupation: user?.occupation || '',
+                experienceYears: user?.experienceYears || '',
+                specialtyField: user?.specialtyField || ''
             });
-            setAvatarPreview(user.avatar || '');
+            setAvatarPreview(user?.avatar || '');
         }
     }, [user]);
 
@@ -106,14 +106,13 @@ const EditProfile = () => {
             }
 
             const { data } = await axios.put(
-                'http://localhost:5000/api/auth/profile',
+                'http://localhost:5000/api/profile',
                 updateData,
                 config
             );
 
-            // Update context and localStorage
-            setUser(data);
-            localStorage.setItem('user', JSON.stringify(data));
+            // Re-hydrate context with the rich profile data (merging user + profile)
+            await fetchProfile(user.token);
 
             setSuccess('Profile updated successfully!');
             setTimeout(() => {

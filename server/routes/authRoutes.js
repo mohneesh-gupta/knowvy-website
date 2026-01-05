@@ -1,11 +1,22 @@
 import express from 'express';
-import { authUser, registerUser, getUserProfile, updateUserProfile } from '../controllers/authController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import passport from 'passport';
+import { authUser, registerUser, googleCallback } from '../controllers/authController.js';
 
 const router = express.Router();
 
 router.post('/signup', registerUser);
 router.post('/login', authUser);
-router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile);
+
+// Google OAuth Routes
+router.get(
+    '/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+router.get(
+    '/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    googleCallback
+);
 
 export default router;

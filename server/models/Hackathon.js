@@ -11,8 +11,8 @@ const hackathonSchema = mongoose.Schema({
     banner: { type: String },
     location: { type: String, required: true },
     tags: [{ type: String }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'createdByModel' },
-    createdByModel: { type: String, required: true, enum: ['Admin', 'Organization', 'Mentor'] },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    createdByModel: { type: String, required: true, enum: ['Admin', 'Organization', 'Mentor', 'Student'] },
     approved: { type: Boolean, default: false },
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
     approvedAt: { type: Date }

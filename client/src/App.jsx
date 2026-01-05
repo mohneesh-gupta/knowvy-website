@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from "./context/AuthContext";
 
 import Navbar from "./components/Navbar";
@@ -15,6 +16,31 @@ function App() {
           <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-neon-blue/20 blur-[120px] rounded-full pointer-events-none translate-x-1/2 translate-y-1/2" />
 
           <Navbar />
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              className: '',
+              style: {
+                background: 'rgba(20, 20, 30, 0.9)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#39FF14',
+                  secondary: 'black',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#FF073A',
+                  secondary: 'black',
+                },
+              },
+            }}
+          />
 
           {/* ALL ROUTES LIVE HERE */}
           <main className="relative z-10 px-4 py-8 max-w-7xl mx-auto flex-grow w-full">

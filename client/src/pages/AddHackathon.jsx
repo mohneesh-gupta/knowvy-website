@@ -64,6 +64,7 @@ const AddHackathon = () => {
             const response = await axios.post('http://localhost:5000/api/hackathons', hackathonData, config);
 
             console.log('Hackathon created:', response.data);
+            alert('Hackathon submitted successfully! It will be visible once approved by the admin.');
             navigate('/hackathons');
         } catch (error) {
             console.error('Error creating hackathon:', error.response?.data || error.message);
@@ -71,17 +72,15 @@ const AddHackathon = () => {
         }
     };
 
-    // Check if user has permission - students cannot create hackathons
-    // Admin can create anything
-    if (!user || (user.userType === 'student')) {
+    // Check if user is logged in
+    if (!user) {
         return (
             <div className="max-w-2xl mx-auto mt-20 text-center">
                 <div className="glass-panel p-8 border-red-500/30">
-                    <h2 className="text-2xl font-bold text-red-500 mb-4">Access Denied</h2>
-                    <p className="text-gray-400">Only organizations, mentors, and admins can create hackathons.</p>
-                    <p className="text-gray-500 text-sm mt-2">Students cannot host hackathons.</p>
-                    <Link to="/hackathons" className="mt-6 inline-block bg-neon-purple text-white px-6 py-2 rounded-lg hover:shadow-[0_0_20px_rgba(188,19,254,0.5)] transition-all">
-                        View Hackathons
+                    <h2 className="text-2xl font-bold text-red-500 mb-4">Login Required</h2>
+                    <p className="text-gray-400">Please login to host a hackathon.</p>
+                    <Link to="/login" className="mt-6 inline-block bg-neon-purple text-white px-6 py-2 rounded-lg transition-all">
+                        Login
                     </Link>
                 </div>
             </div>
@@ -246,7 +245,7 @@ const AddHackathon = () => {
                     type="submit"
                     className="w-full bg-neon-purple text-white font-bold py-3 rounded-lg hover:shadow-[0_0_20px_rgba(188,19,254,0.5)] transition-all"
                 >
-                    Create Hackathon
+                    Submit for Approval
                 </button>
             </form>
         </div>

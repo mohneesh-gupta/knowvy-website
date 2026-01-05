@@ -35,8 +35,8 @@ const Signup = () => {
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
 
-  /* ===================== USER TYPE ===================== */
-  const [userType, setUserType] = useState("student");
+  /* ===================== ROLE ===================== */
+  const [role, setRole] = useState("student");
 
   /* ===================== STUDENT ===================== */
   const [college, setCollege] = useState("");
@@ -75,7 +75,7 @@ const Signup = () => {
       .filter(Boolean);
 
     // Client-side validation for role-specific required fields
-    if (userType === "student") {
+    if (role === "student") {
       if (!college.trim()) {
         setError("College is required for students.");
         setLoading(false);
@@ -88,7 +88,7 @@ const Signup = () => {
       }
     }
 
-    if (userType === "mentor") {
+    if (role === "mentor") {
       if (!occupation.trim()) {
         setError("Occupation is required for mentors.");
         setLoading(false);
@@ -112,7 +112,7 @@ const Signup = () => {
       }
     }
 
-    if (userType === "organization") {
+    if (role === "organization") {
       if (!orgName.trim()) {
         setError("Organization name is required.");
         setLoading(false);
@@ -128,46 +128,36 @@ const Signup = () => {
     try {
       const extraFields = {};
 
-      // STUDENT: send college & skills (skills via skillsArray)
-      if (userType === "student") {
+      if (role === "student") {
         extraFields.college = college.trim();
-        // no need to duplicate skills in extraFields because we pass skillsArray in the main skills arg
       }
 
-      // MENTOR: send occupation, specialtyField, experienceYears
-      if (userType === "mentor") {
+      if (role === "mentor") {
         extraFields.occupation = occupation.trim();
-        // IMPORTANT: backend expects `specialtyField`
         extraFields.specialtyField = specialty.trim();
-        // convert to number before sending
         extraFields.experienceYears = Number(experienceYears);
-        // skills will be passed via skillsArray param
       }
 
-      // ORGANIZATION: send orgName & location
-      if (userType === "organization") {
+      if (role === "organization") {
         extraFields.orgName = orgName.trim();
         extraFields.location = location.trim();
       }
 
-      // Call signup:
-      // signup(name, email, password, userType, phone, collegeParam, bio, skillsParam, avatar, ...otherFields)
       await signup(
         name,
         email,
         password,
-        userType,
+        role,
         phone,
-        null, // college handled via extraFields (or passed in signup param if you prefer)
+        null,
         bio,
-        skillsArray, // send normalized skills here (will be used by student and mentor)
+        skillsArray,
         avatar,
         extraFields
       );
 
       navigate("/");
     } catch (errMessage) {
-      // errMessage comes from AuthContext and is a string
       setError(errMessage);
     } finally {
       setLoading(false);
@@ -194,7 +184,6 @@ const Signup = () => {
           Create Account
         </h2>
 
-        {/* ERROR MESSAGE */}
         {error && (
           <div className="bg-red-500/10 border border-red-500 text-red-400 p-3 rounded-lg mb-6 flex items-center gap-2">
             <AlertTriangle size={18} />
@@ -203,13 +192,11 @@ const Signup = () => {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* NAME + EMAIL */}
           <div className="grid md:grid-cols-2 gap-4">
             <Input label="Full Name *" icon={User} value={name} onChange={setName} required />
             <Input label="Email Address *" icon={Mail} value={email} onChange={setEmail} type="email" required />
           </div>
 
-          {/* AVATAR */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-400">Profile Picture *</label>
             <div className="flex items-center gap-4">
@@ -228,13 +215,11 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* PASSWORD + PHONE */}
           <div className="grid md:grid-cols-2 gap-4">
             <Input label="Password *" icon={Lock} value={password} onChange={setPassword} type="password" required />
             <Input label="Phone *" icon={Phone} value={phone} onChange={setPhone} required />
           </div>
 
-          {/* BIO */}
           <div className="space-y-2">
             <label className="text-sm text-gray-400">Bio *</label>
             <div className="relative">
@@ -249,12 +234,11 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* USER TYPE */}
           <div className="space-y-2">
             <label className="text-sm text-gray-400">I am a *</label>
             <select
-              value={userType}
-              onChange={(e) => setUserType(e.target.value)}
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
               className="w-full bg-dark-bg border rounded-lg py-3 px-4 text-white"
             >
               <option value="student">Student</option>
@@ -264,22 +248,20 @@ const Signup = () => {
             </select>
           </div>
 
-          {/* ADMIN WARNING */}
-          {userType === "admin" && (
+          {role === "admin" && (
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mt-2">
               <p className="text-xs text-yellow-400">⚠️ Only one admin account is allowed.</p>
             </div>
           )}
 
-          {/* ROLE-BASED FIELDS */}
-          {userType === "student" && (
+          {role === "student" && (
             <>
               <Input label="College *" icon={BookOpen} value={college} onChange={setCollege} required />
               <Input label="Skills *" icon={Code} value={skills} onChange={setSkills} required placeholder="React, Java, DSA" />
             </>
           )}
 
-          {userType === "mentor" && (
+          {role === "mentor" && (
             <>
               <Input label="Occupation *" icon={Briefcase} value={occupation} onChange={setOccupation} required />
               <Input label="Specialty Field *" icon={Code} value={specialty} onChange={setSpecialty} required />
@@ -295,7 +277,7 @@ const Signup = () => {
             </>
           )}
 
-          {userType === "organization" && (
+          {role === "organization" && (
             <>
               <Input label="Organization Name *" icon={Building} value={orgName} onChange={setOrgName} required />
               <Input label="Location / Address *" icon={MapPin} value={location} onChange={setLocation} required />
@@ -310,6 +292,23 @@ const Signup = () => {
             {loading ? "Creating account..." : "Join Knowvy"}
           </button>
         </form>
+
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/10"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-dark-bg text-gray-400">OR</span>
+          </div>
+        </div>
+
+        <a
+          href="http://localhost:5000/api/auth/google"
+          className="flex items-center justify-center gap-3 w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-100 transition-all"
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+          Sign up with Google
+        </a>
 
         <p className="text-center text-gray-400 mt-6">
           Already have an account?{" "}

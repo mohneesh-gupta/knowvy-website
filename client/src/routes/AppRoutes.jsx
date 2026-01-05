@@ -22,6 +22,7 @@ import AdminApprovals from "../pages/AdminApprovals";
 
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import CompleteProfile from "../pages/CompleteProfile";
 import MyEvents from "../pages/MyEvents";
 
 import Chat from "../components/Chat";
@@ -59,6 +60,7 @@ export default function AppRoutes() {
       {/* USER */}
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/edit" element={<EditProfile />} />
+      <Route path="/complete-profile" element={<CompleteProfile />} />
       <Route path="/my-events" element={<MyEvents />} />
     </Routes>
   );

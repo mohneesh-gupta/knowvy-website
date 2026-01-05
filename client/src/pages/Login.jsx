@@ -67,6 +67,23 @@ const Login = () => {
                     </button>
                 </form>
 
+                <div className="relative my-8">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-white/10"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-dark-bg text-gray-400">OR</span>
+                    </div>
+                </div>
+
+                <a
+                    href="http://localhost:5000/api/auth/google"
+                    className="flex items-center justify-center gap-3 w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-100 transition-all"
+                >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                    Continue with Google
+                </a>
+
                 <p className="text-center text-gray-400 mt-6">
                     Don't have an account? <Link to="/signup" className="text-neon-green hover:underline">Sign up</Link>
                 </p>

@@ -9,6 +9,7 @@ const AdminApprovals = () => {
     const [activeTab, setActiveTab] = useState('hackathons');
     const [pendingHackathons, setPendingHackathons] = useState([]);
     const [pendingSessions, setPendingSessions] = useState([]);
+    const [pendingUsers, setPendingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,17 +24,43 @@ const AdminApprovals = () => {
                 },
             };
 
-            const [hackathonsRes, sessionsRes] = await Promise.all([
+            const [hackathonsRes, sessionsRes, usersRes] = await Promise.all([
                 axios.get('http://localhost:5000/api/hackathons/admin/pending', config),
-                axios.get('http://localhost:5000/api/sessions/admin/pending', config)
+                axios.get('http://localhost:5000/api/sessions/admin/pending', config),
+                axios.get('http://localhost:5000/api/admin/pending-users', config)
             ]);
 
             setPendingHackathons(hackathonsRes.data);
             setPendingSessions(sessionsRes.data);
+            setPendingUsers(usersRes.data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching pending items:', error);
             setLoading(false);
+        }
+    };
+
+    const handleApproveUser = async (id) => {
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+            await axios.put(`http://localhost:5000/api/admin/approve-user/${id}`, {}, config);
+            alert('User approved successfully!');
+            fetchPendingItems();
+        } catch (error) {
+            alert('Error approving user');
+        }
+    };
+
+    const handleRejectUser = async (id) => {
+        if (window.confirm('Are you sure you want to reject this user? Their account will be deleted.')) {
+            try {
+                const config = { headers: { Authorization: `Bearer ${user.token}` } };
+                await axios.delete(`http://localhost:5000/api/admin/reject-user/${id}`, config);
+                alert('User rejected and deleted');
+                fetchPendingItems();
+            } catch (error) {
+                alert('Error rejecting user');
+            }
         }
     };
 
@@ -133,6 +160,10 @@ const AdminApprovals = () => {
                         <span className="text-neon-pink font-bold">{pendingSessions.length}</span>
                         <span className="text-gray-400 ml-2">Sessions</span>
                     </div>
+                    <div className="glass-panel px-4 py-2">
+                        <span className="text-neon-green font-bold">{pendingUsers.length}</span>
+                        <span className="text-gray-400 ml-2">Users</span>
+                    </div>
                 </div>
             </div>
 
@@ -156,7 +187,64 @@ const AdminApprovals = () => {
                 >
                     Sessions ({pendingSessions.length})
                 </button>
+                <button
+                    onClick={() => setActiveTab('users')}
+                    className={`px-6 py-3 font-bold transition-all ${activeTab === 'users'
+                        ? 'text-neon-green border-b-2 border-neon-green'
+                        : 'text-gray-400 hover:text-white'
+                        }`}
+                >
+                    Users ({pendingUsers.length})
+                </button>
             </div>
+
+            {/* Users Tab */}
+            {activeTab === 'users' && (
+                <div className="space-y-6">
+                    {pendingUsers.length === 0 ? (
+                        <div className="text-center py-20 glass-panel">
+                            <p className="text-gray-400">No pending user requests</p>
+                        </div>
+                    ) : (
+                        pendingUsers.map((pUser) => (
+                            <div key={pUser._id} className="glass-panel p-6 border-neon-green/30">
+                                <div className="flex items-center gap-6">
+                                    <div className="w-16 h-16 rounded-full border-2 border-neon-green p-0.5">
+                                        <img
+                                            src={pUser.avatar || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"}
+                                            alt={pUser.name}
+                                            className="w-full h-full object-cover rounded-full"
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-bold">{pUser.name}</h3>
+                                        <p className="text-gray-400">{pUser.email}</p>
+                                        <div className="flex gap-2 mt-2">
+                                            <span className="px-3 py-1 bg-white/5 rounded-full text-xs text-neon-green border border-neon-green/20 capitalize">
+                                                {pUser.role}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => handleApproveUser(pUser._id)}
+                                            className="bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 px-6 py-2 rounded-lg font-bold transition-all"
+                                        >
+                                            Approve
+                                        </button>
+                                        <button
+                                            onClick={() => handleRejectUser(pUser._id)}
+                                            className="bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 px-6 py-2 rounded-lg font-bold transition-all"
+                                        >
+                                            Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
 
             {/* Hackathons Tab */}
             {activeTab === 'hackathons' && (

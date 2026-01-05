@@ -1,12 +1,92 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut, Bell } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const NotificationDropdown = ({ notifications, onMarkRead }) => {
+    if (notifications.length === 0) {
+        return (
+            <div className="absolute right-0 top-12 w-80 bg-dark-card border border-white/10 rounded-xl p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95">
+                <p className="text-gray-400 text-center text-sm">No new notifications</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="absolute right-0 top-12 w-80 bg-dark-card border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 max-h-96 overflow-y-auto">
+            <div className="p-3 border-b border-white/10 flex justify-between items-center bg-black/40">
+                <h4 className="text-sm font-bold text-white">Notifications</h4>
+                <button onClick={() => onMarkRead('all')} className="text-xs text-neon-blue hover:underline">Mark all read</button>
+            </div>
+            {notifications.map((notif) => (
+                <div
+                    key={notif._id}
+                    onClick={() => onMarkRead(notif._id, notif.link)}
+                    className={`p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors ${!notif.read ? 'bg-white/[0.02]' : ''}`}
+                >
+                    <div className="flex gap-3">
+                        <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${!notif.read ? 'bg-neon-green shadow-[0_0_8px_rgba(57,255,20,0.6)]' : 'bg-transparent'}`} />
+                        <div>
+                            <h5 className={`text-sm mb-1 ${!notif.read ? 'font-bold text-white' : 'font-medium text-gray-400'}`}>{notif.title}</h5>
+                            <p className="text-xs text-gray-500 line-clamp-2">{notif.message}</p>
+                            <span className="text-[10px] text-gray-600 mt-2 block">{new Date(notif.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [showNotifs, setShowNotifs] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    // Poll for notifications every 30 seconds
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchNotifications = async () => {
+            try {
+                const config = { headers: { Authorization: `Bearer ${user.token}` } };
+                const { data } = await axios.get('http://localhost:5000/api/notifications', config);
+                setNotifications(data);
+                setUnreadCount(data.filter(n => !n.read).length);
+            } catch (error) {
+                console.error("Failed to fetch notifications");
+            }
+        };
+
+        fetchNotifications();
+        const interval = setInterval(fetchNotifications, 30000);
+        return () => clearInterval(interval);
+    }, [user]);
+
+    const handleMarkRead = async (id, link) => {
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+
+            if (id === 'all') {
+                await axios.put('http://localhost:5000/api/notifications/read-all', {}, config);
+                setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                setUnreadCount(0);
+                toast.success('All marked as read');
+            } else {
+                await axios.put(`http://localhost:5000/api/notifications/${id}/read`, {}, config);
+                setNotifications(prev => prev.map(n => n._id === id ? ({ ...n, read: true }) : n));
+                setUnreadCount(prev => Math.max(0, prev - 1));
+                if (link) navigate(link);
+            }
+        } catch (error) {
+            console.error("Error marking read");
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -41,9 +121,30 @@ const Navbar = () => {
                             <Link to="/admin/approvals" className="text-neon-pink hover:underline">Approvals</Link>
                         )}
 
+                        {/* Notifications */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowNotifs(!showNotifs)}
+                                className="relative p-2 text-gray-400 hover:text-white transition-colors"
+                            >
+                                <Bell size={20} />
+                                {unreadCount > 0 && (
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center border-2 border-dark-card">
+                                        {unreadCount}
+                                    </span>
+                                )}
+                            </button>
+                            {showNotifs && (
+                                <NotificationDropdown
+                                    notifications={notifications}
+                                    onMarkRead={handleMarkRead}
+                                />
+                            )}
+                        </div>
+
                         <Link to="/profile" className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/10 transition-all">
-                            <img src={user.avatar} alt="avatar" className="w-6 h-6 rounded-full border border-neon-purple" />
-                            <span className="text-white font-bold">{user.name.split(' ')[0]}</span>
+                            <img src={user?.avatar || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} alt="avatar" className="w-6 h-6 rounded-full border border-neon-purple" />
+                            <span className="text-white font-bold">{user?.name?.split(' ')[0] || 'User'}</span>
                         </Link>
                         <button onClick={handleLogout} className="text-gray-400 hover:text-red-500">
                             <LogOut size={18} />

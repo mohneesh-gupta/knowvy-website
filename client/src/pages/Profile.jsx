@@ -176,6 +176,27 @@ const Profile = () => {
                     </div>
                 )}
             </div>
+            {/* History Section - Placeholder for now, to be populated dynamically later */}
+            <div className="glass-panel p-8 space-y-6">
+                <h2 className="text-2xl font-bold font-display text-white mb-4">Activity History</h2>
+                {user.eventsJoined && user.eventsJoined.length > 0 ? (
+                    <div className="space-y-4">
+                        {user.eventsJoined.map((event, index) => (
+                            <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5 hover:border-neon-purple/50 transition-all">
+                                <div>
+                                    <h4 className="font-bold text-white mb-1">{event.title || 'Event Name'}</h4>
+                                    <p className="text-xs text-gray-400">Joined on {new Date().toLocaleDateString()}</p>
+                                </div>
+                                <Link to={`/hackathons/${event._id}`} className="text-sm text-neon-purple hover:underline">View</Link>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-8 text-gray-500 italic">
+                        No activity history yet. Join hackathons or sessions to see them here!
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

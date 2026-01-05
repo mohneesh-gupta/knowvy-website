@@ -1,6 +1,6 @@
 import express from 'express';
 import { getHackathons, getHackathonById, createHackathon, deleteHackathon, getPendingHackathons, approveHackathon, rejectHackathon, getMyHackathons } from '../controllers/hackathonController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect, admin, approved } from '../middleware/protect.js';
 import { requireOrganization } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.route('/').get(getHackathons);
 router.route('/:id').get(getHackathonById);
 
 // Protected routes - not restricted to organization only
-router.post('/', protect, createHackathon);
+router.post('/', protect, approved, createHackathon);
 router.delete('/:id', protect, deleteHackathon);
 
 // User's own hackathons

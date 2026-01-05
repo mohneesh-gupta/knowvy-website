@@ -1,5 +1,5 @@
 // import express from "express";
-// import { protect } from "../middleware/authMiddleware.js";
+// import { protect } from "../middleware/protect.js";
 // import { chatWithAI, streamChat, getHistory } from "../controllers/aiController.js";
 
 // const router = express.Router();

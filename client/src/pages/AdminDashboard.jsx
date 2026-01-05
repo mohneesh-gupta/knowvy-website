@@ -42,7 +42,15 @@ const AdminDashboard = () => {
 
     return (
         <div className="space-y-10">
-            <h1 className="text-4xl font-display font-bold text-white">Admin Dashboard</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-4xl font-display font-bold text-white">Admin Dashboard</h1>
+                <button
+                    onClick={() => navigate('/admin/approvals')}
+                    className="bg-neon-purple text-white px-6 py-2 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(188,19,254,0.5)] transition-all"
+                >
+                    Detailed Approvals
+                </button>
+            </div>
 
             {/* Stats Cards */}
             <div className="grid md:grid-cols-3 gap-6">

@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Session from '../models/Session.js';
+import { createNotification } from './notificationController.js';
 
 // Helper to get model name from userType
 const getModelName = (userType) => {
@@ -53,7 +54,7 @@ const createSession = asyncHandler(async (req, res) => {
         description,
         banner,
         createdBy: req.user._id,
-        createdByModel: getModelName(req.userType),
+        createdByModel: getModelName(req.user.role),
         approved: false // Requires admin approval
     });
 
@@ -83,6 +84,15 @@ const approveSession = asyncHandler(async (req, res) => {
         session.approvedAt = Date.now();
 
         const updatedSession = await session.save();
+
+        await createNotification({
+            recipient: session.createdBy,
+            type: 'event_approved',
+            title: 'Session Approved! 📚',
+            message: `Your session "${session.title}" has been approved and is now live!`,
+            link: `/sessions/${session._id}`
+        });
+
         res.json(updatedSession);
     } else {
         res.status(404);

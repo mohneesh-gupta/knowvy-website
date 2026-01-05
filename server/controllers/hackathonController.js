@@ -1,12 +1,14 @@
 import asyncHandler from 'express-async-handler';
 import Hackathon from '../models/Hackathon.js';
+import { createNotification } from './notificationController.js';
 
 // Helper to get model name from userType
 const getModelName = (userType) => {
     const modelMap = {
         'admin': 'Admin',
         'organization': 'Organization',
-        'mentor': 'Mentor'
+        'mentor': 'Mentor',
+        'student': 'Student'
     };
     return modelMap[userType] || 'Organization';
 };
@@ -54,7 +56,7 @@ const createHackathon = asyncHandler(async (req, res) => {
         location,
         tags,
         createdBy: req.user._id,
-        createdByModel: getModelName(req.userType),
+        createdByModel: getModelName(req.user.role),
         approved: false // Requires admin approval
     });
 
@@ -70,7 +72,7 @@ const deleteHackathon = asyncHandler(async (req, res) => {
 
     if (hackathon) {
         // Check if user is the creator or admin
-        if (hackathon.createdBy.toString() === req.user._id.toString() || req.userType === 'admin') {
+        if (hackathon.createdBy.toString() === req.user._id.toString() || req.user.role === 'admin') {
             await hackathon.deleteOne();
             res.json({ message: 'Hackathon removed' });
         } else {
@@ -105,6 +107,15 @@ const approveHackathon = asyncHandler(async (req, res) => {
         hackathon.approvedAt = Date.now();
 
         const updatedHackathon = await hackathon.save();
+
+        await createNotification({
+            recipient: hackathon.createdBy,
+            type: 'event_approved',
+            title: 'Hackathon Approved! 🚀',
+            message: `Your hackathon "${hackathon.title}" has been approved and is now live!`,
+            link: `/hackathons/${hackathon._id}`
+        });
+
         res.json(updatedHackathon);
     } else {
         res.status(404);

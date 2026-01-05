@@ -1,6 +1,6 @@
 import express from 'express';
 import { getSessions, createSession, getSessionById, getPendingSessions, approveSession, rejectSession, getMySessions } from '../controllers/sessionController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect, admin } from '../middleware/protect.js';
 import { requireOrganizationOrMentor } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
