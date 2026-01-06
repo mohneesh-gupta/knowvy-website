@@ -56,8 +56,8 @@ const BookMentor = () => {
                 }
             };
 
-            await axios.post('http://localhost:5000/api/mentorship-requests', {
-                mentor: id,
+            await axios.post('http://localhost:5000/api/mentorship', {
+                mentorId: id,
                 type: bookingType,
                 subject: formData.subject,
                 message: formData.message,
@@ -97,9 +97,9 @@ const BookMentor = () => {
             <div className="glass-panel p-6 border-neon-purple/30">
                 <div className="flex gap-6 items-start">
                     <img
-                        src={mentor.avatar}
+                        src={mentor.avatar || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"}
                         alt={mentor.name}
-                        className="w-24 h-24 rounded-full border-2 border-neon-purple"
+                        className="w-24 h-24 rounded-full border-2 border-neon-purple object-cover"
                     />
                     <div className="flex-1">
                         <h2 className="text-3xl font-bold mb-2">{mentor.name}</h2>
@@ -159,8 +159,8 @@ const BookMentor = () => {
                                 type="button"
                                 onClick={() => setBookingType('call')}
                                 className={`p-4 rounded-lg border-2 transition-all ${bookingType === 'call'
-                                        ? 'border-neon-blue bg-neon-blue/10'
-                                        : 'border-white/10 hover:border-white/30'
+                                    ? 'border-neon-blue bg-neon-blue/10'
+                                    : 'border-white/10 hover:border-white/30'
                                     }`}
                             >
                                 <Phone className="mx-auto mb-2" size={24} />
@@ -171,8 +171,8 @@ const BookMentor = () => {
                                 type="button"
                                 onClick={() => setBookingType('message')}
                                 className={`p-4 rounded-lg border-2 transition-all ${bookingType === 'message'
-                                        ? 'border-neon-pink bg-neon-pink/10'
-                                        : 'border-white/10 hover:border-white/30'
+                                    ? 'border-neon-pink bg-neon-pink/10'
+                                    : 'border-white/10 hover:border-white/30'
                                     }`}
                             >
                                 <MessageSquare className="mx-auto mb-2" size={24} />

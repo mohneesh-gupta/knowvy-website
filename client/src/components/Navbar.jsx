@@ -68,6 +68,18 @@ const Navbar = () => {
         return () => clearInterval(interval);
     }, [user]);
 
+    // Close notification dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showNotifs && !event.target.closest('.notification-container')) {
+                setShowNotifs(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [showNotifs]);
+
     const handleMarkRead = async (id, link) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
@@ -116,13 +128,23 @@ const Navbar = () => {
                             <Link to="/my-events" className="text-neon-purple hover:underline">My Events</Link>
                         )}
 
+                        {/* Mentorship Requests for Mentors */}
+                        {user.userType === 'mentor' && (
+                            <Link to="/mentorship/requests" className="text-neon-pink hover:underline">Requests</Link>
+                        )}
+
+                        {/* My Requests for Students */}
+                        {user.userType === 'student' && (
+                            <Link to="/mentorship/my-requests" className="text-neon-green hover:underline">My Requests</Link>
+                        )}
+
                         {/* Admin Approvals link */}
                         {user.userType === 'admin' && (
                             <Link to="/admin/approvals" className="text-neon-pink hover:underline">Approvals</Link>
                         )}
 
                         {/* Notifications */}
-                        <div className="relative">
+                        <div className="relative notification-container">
                             <button
                                 onClick={() => setShowNotifs(!showNotifs)}
                                 className="relative p-2 text-gray-400 hover:text-white transition-colors"

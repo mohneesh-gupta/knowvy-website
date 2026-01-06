@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { CheckCircle, XCircle, Calendar, MapPin, User, Clock } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const AdminApprovals = () => {
     const { user } = useContext(AuthContext);
@@ -44,10 +45,10 @@ const AdminApprovals = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
             await axios.put(`http://localhost:5000/api/admin/approve-user/${id}`, {}, config);
-            alert('User approved successfully!');
+            toast.success('User approved successfully!');
             fetchPendingItems();
         } catch (error) {
-            alert('Error approving user');
+            toast.error('Error approving user');
         }
     };
 
@@ -56,10 +57,10 @@ const AdminApprovals = () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
                 await axios.delete(`http://localhost:5000/api/admin/reject-user/${id}`, config);
-                alert('User rejected and deleted');
+                toast.success('User rejected and deleted');
                 fetchPendingItems();
             } catch (error) {
-                alert('Error rejecting user');
+                toast.error('Error rejecting user');
             }
         }
     };
@@ -73,10 +74,10 @@ const AdminApprovals = () => {
             };
 
             await axios.put(`http://localhost:5000/api/hackathons/${id}/approve`, {}, config);
-            alert('Hackathon approved successfully!');
+            toast.success('Hackathon approved successfully!');
             fetchPendingItems();
         } catch (error) {
-            alert('Error approving hackathon');
+            toast.error('Error approving hackathon');
         }
     };
 
@@ -90,10 +91,10 @@ const AdminApprovals = () => {
                 };
 
                 await axios.delete(`http://localhost:5000/api/hackathons/${id}/reject`, config);
-                alert('Hackathon rejected and deleted');
+                toast.success('Hackathon rejected and deleted');
                 fetchPendingItems();
             } catch (error) {
-                alert('Error rejecting hackathon');
+                toast.error('Error rejecting hackathon');
             }
         }
     };
@@ -107,10 +108,10 @@ const AdminApprovals = () => {
             };
 
             await axios.put(`http://localhost:5000/api/sessions/${id}/approve`, {}, config);
-            alert('Session approved successfully!');
+            toast.success('Session approved successfully!');
             fetchPendingItems();
         } catch (error) {
-            alert('Error approving session');
+            toast.error('Error approving session');
         }
     };
 
@@ -124,10 +125,10 @@ const AdminApprovals = () => {
                 };
 
                 await axios.delete(`http://localhost:5000/api/sessions/${id}/reject`, config);
-                alert('Session rejected and deleted');
+                toast.success('Session rejected and deleted');
                 fetchPendingItems();
             } catch (error) {
-                alert('Error rejecting session');
+                toast.error('Error rejecting session');
             }
         }
     };

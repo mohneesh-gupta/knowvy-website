@@ -61,6 +61,22 @@ const createHackathon = asyncHandler(async (req, res) => {
     });
 
     const createdHackathon = await hackathon.save();
+
+    // Notify all admins about new hackathon pending approval
+    const User = (await import('../models/User.js')).default;
+    const admins = await User.find({ role: 'admin' });
+
+    for (const admin of admins) {
+        await createNotification({
+            recipient: admin._id,
+            sender: req.user._id,
+            type: 'admin_action',
+            title: '🎯 New Hackathon Pending Approval',
+            message: `${req.user.name} has submitted a new hackathon "${title}" for review.`,
+            link: '/admin/approvals'
+        });
+    }
+
     res.status(201).json(createdHackathon);
 });
 

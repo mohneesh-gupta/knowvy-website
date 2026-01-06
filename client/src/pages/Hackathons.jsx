@@ -24,7 +24,7 @@ const Hackathons = () => {
         <div className="space-y-10">
             <div className="flex justify-between items-center">
                 <h1 className="text-4xl font-display font-bold">Upcoming Hackathons</h1>
-                {user && (user.userType === 'organization' || user.userType === 'mentor' || user.userType === 'admin') && (
+                {user && (
                     <Link to="/hackathons/add" className="bg-white/10 hover:bg-neon-green hover:text-black border border-white/20 px-6 py-2 rounded-lg font-bold transition-all">
                         + Host Hackathon
                     </Link>

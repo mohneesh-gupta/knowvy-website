@@ -3,12 +3,12 @@ import mongoose from 'mongoose';
 const mentorshipRequestSchema = mongoose.Schema({
     student: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Student',
+        ref: 'User',
         required: true
     },
     mentor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Mentor',
+        ref: 'User',
         required: true
     },
     type: {

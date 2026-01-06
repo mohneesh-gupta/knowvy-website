@@ -113,6 +113,23 @@ const registerUser = asyncHandler(async (req, res) => {
       throw profileError;
     }
 
+    // Notify admins if mentor or organization needs approval
+    if (role === 'mentor' || role === 'organization') {
+      const { createNotification } = await import('./notificationController.js');
+      const admins = await User.find({ role: 'admin' });
+
+      for (const admin of admins) {
+        await createNotification({
+          recipient: admin._id,
+          sender: user._id,
+          type: 'admin_action',
+          title: '👤 New Account Pending Approval',
+          message: `A new ${role} account "${name}" has registered and needs approval.`,
+          link: '/admin/approvals'
+        });
+      }
+    }
+
     res.status(201).json({
       _id: user._id,
       name: user.name,

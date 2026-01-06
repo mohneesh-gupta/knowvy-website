@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { stopSpeaking } from "./VoiceOutput";
+import toast from "react-hot-toast";
 
 export default function VoiceInput({ onResult, disabled }) {
   const recognitionRef = useRef(null);
@@ -13,7 +14,7 @@ export default function VoiceInput({ onResult, disabled }) {
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Speech recognition not supported in this browser");
+      toast.error("Speech recognition not supported in this browser");
       return;
     }
 
@@ -40,11 +41,10 @@ export default function VoiceInput({ onResult, disabled }) {
     <button
       onClick={startListening}
       disabled={disabled}
-      className={`px-6 py-3 rounded-full font-semibold transition ${
-        listening
+      className={`px-6 py-3 rounded-full font-semibold transition ${listening
           ? "bg-red-600"
           : "bg-blue-600 hover:bg-blue-700"
-      }`}
+        }`}
     >
       {listening ? "🎙️ Listening..." : "🎤 Speak"}
     </button>

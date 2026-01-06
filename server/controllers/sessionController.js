@@ -59,6 +59,22 @@ const createSession = asyncHandler(async (req, res) => {
     });
 
     const createdSession = await session.save();
+
+    // Notify all admins about new session pending approval
+    const User = (await import('../models/User.js')).default;
+    const admins = await User.find({ role: 'admin' });
+
+    for (const admin of admins) {
+        await createNotification({
+            recipient: admin._id,
+            sender: req.user._id,
+            type: 'admin_action',
+            title: '📚 New Session Pending Approval',
+            message: `${req.user.name} has submitted a new session "${title}" for review.`,
+            link: '/admin/approvals'
+        });
+    }
+
     res.status(201).json(createdSession);
 });
 

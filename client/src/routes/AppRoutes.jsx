@@ -16,6 +16,9 @@ import SessionDetails from "../pages/SessionDetails";
 
 import Mentorship from "../pages/Mentorship";
 import BookMentor from "../pages/BookMentor";
+import MentorRequests from "../pages/MentorRequests";
+import StudentRequests from "../pages/StudentRequests";
+import MentorshipChat from "../pages/MentorshipChat";
 
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminApprovals from "../pages/AdminApprovals";
@@ -52,6 +55,9 @@ export default function AppRoutes() {
       {/* MENTORSHIP */}
       <Route path="/mentorship" element={<Mentorship />} />
       <Route path="/mentorship/book/:id" element={<BookMentor />} />
+      <Route path="/mentorship/requests" element={<MentorRequests />} />
+      <Route path="/mentorship/my-requests" element={<StudentRequests />} />
+      <Route path="/mentorship/chat/:requestId" element={<MentorshipChat />} />
 
       {/* ADMIN */}
       <Route path="/admin" element={<AdminDashboard />} />

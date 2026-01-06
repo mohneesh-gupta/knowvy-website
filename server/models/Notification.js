@@ -19,6 +19,7 @@ const notificationSchema = mongoose.Schema({
             'booking_update',// Mentor accepted/rejected
             'event_join',    // Someone joined an event
             'event_approved',// Admin approved hackathon/session
+            'admin_action',  // Action required by admin (pending approvals)
             'message'        // General notification
         ],
         required: true

@@ -84,6 +84,22 @@ const AddSession = () => {
         );
     }
 
+    // Check if mentor/organization account is approved
+    if ((user.userType === 'mentor' || user.userType === 'organization') && !user.isApproved) {
+        return (
+            <div className="max-w-2xl mx-auto mt-20 text-center">
+                <div className="glass-panel p-8 border-yellow-500/30">
+                    <h2 className="text-2xl font-bold text-yellow-500 mb-4">⏳ Approval Pending</h2>
+                    <p className="text-gray-400 mb-4">Your account needs to be approved by an admin before you can create sessions.</p>
+                    <p className="text-sm text-gray-500">Please wait for admin approval. You'll receive a notification once your account is approved.</p>
+                    <Link to="/sessions" className="mt-6 inline-block bg-neon-pink text-white px-6 py-2 rounded-lg hover:shadow-[0_0_20px_rgba(255,0,255,0.5)] transition-all">
+                        View Sessions
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-xl mx-auto">
             <h1 className="text-3xl font-display font-bold mb-8 text-center">Schedule Session</h1>

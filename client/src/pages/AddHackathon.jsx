@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Upload, Calendar, Globe, MapPin, Type, FileText, DollarSign, Tag } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const AddHackathon = () => {
     const { user } = useContext(AuthContext);
@@ -64,11 +65,11 @@ const AddHackathon = () => {
             const response = await axios.post('http://localhost:5000/api/hackathons', hackathonData, config);
 
             console.log('Hackathon created:', response.data);
-            alert('Hackathon submitted successfully! It will be visible once approved by the admin.');
+            toast.success('Hackathon submitted successfully! It will be visible once approved by the admin.');
             navigate('/hackathons');
         } catch (error) {
             console.error('Error creating hackathon:', error.response?.data || error.message);
-            alert(`Error: ${error.response?.data?.message || error.message}`);
+            toast.error(error.response?.data?.message || error.message || 'Failed to create hackathon');
         }
     };
 
@@ -81,6 +82,22 @@ const AddHackathon = () => {
                     <p className="text-gray-400">Please login to host a hackathon.</p>
                     <Link to="/login" className="mt-6 inline-block bg-neon-purple text-white px-6 py-2 rounded-lg transition-all">
                         Login
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    // Check if mentor/organization account is approved
+    if ((user.userType === 'mentor' || user.userType === 'organization') && !user.isApproved) {
+        return (
+            <div className="max-w-2xl mx-auto mt-20 text-center">
+                <div className="glass-panel p-8 border-yellow-500/30">
+                    <h2 className="text-2xl font-bold text-yellow-500 mb-4">⏳ Approval Pending</h2>
+                    <p className="text-gray-400 mb-4">Your account needs to be approved by an admin before you can host hackathons.</p>
+                    <p className="text-sm text-gray-500">Please wait for admin approval. You'll receive a notification once your account is approved.</p>
+                    <Link to="/hackathons" className="mt-6 inline-block bg-neon-purple text-white px-6 py-2 rounded-lg transition-all">
+                        View Hackathons
                     </Link>
                 </div>
             </div>
