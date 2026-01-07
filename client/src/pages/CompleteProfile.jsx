@@ -89,7 +89,8 @@ const CompleteProfile = () => {
                 profileData.location = formData.location;
             }
 
-            const token = user?.token || localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
+            const storedUser = localStorage.getItem("user");
+            const token = user?.token || (storedUser ? JSON.parse(storedUser).token : null);
 
             const { data } = await axios.post(
                 `${API_BASE_URL}/api/profile/complete-profile`,

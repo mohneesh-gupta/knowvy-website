@@ -41,10 +41,10 @@ const app = express();
 
 // ✅ CORS (REQUIRED for Netlify + Render + Cookies)
 app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true
-  })
+   cors({
+      origin: process.env.CLIENT_URL,
+      credentials: true
+   })
 );
 
 // Body parsers
@@ -55,17 +55,17 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
    SESSION (REQUIRED FOR PASSPORT)
    ====================== */
 app.use(
-  session({
-    name: 'knowvy.sid',
-    secret: process.env.SESSION_SECRET || 'dev_secret_key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-      sameSite: 'none', // REQUIRED for cross-site cookies
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-  })
+   session({
+      name: 'knowvy.sid',
+      secret: process.env.SESSION_SECRET || 'dev_secret_key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+         secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
+         sameSite: 'none', // REQUIRED for cross-site cookies
+         maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      }
+   })
 );
 
 /* ======================
@@ -95,16 +95,16 @@ app.use('/api/feedback', feedbackRoutes);
    ROOT
    ====================== */
 app.get('/', (req, res) => {
-  res.send('API is running...');
+   res.send('API is running...');
 });
 
 /* ======================
    404 HANDLER
    ====================== */
 app.use((req, res, next) => {
-  const error = new Error(`Not Found - ${req.originalUrl}`);
-  res.status(404);
-  next(error);
+   const error = new Error(`Not Found - ${req.originalUrl}`);
+   res.status(404);
+   next(error);
 });
 
 /* ======================
@@ -118,5 +118,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+   console.log(`Server running on port ${PORT}`);
 });
