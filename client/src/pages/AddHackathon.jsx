@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Upload, Calendar, Globe, MapPin, Type, FileText, DollarSign, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const AddHackathon = () => {
     const { user } = useContext(AuthContext);
@@ -62,7 +63,7 @@ const AddHackathon = () => {
 
             console.log('Submitting hackathon:', hackathonData);
 
-            const response = await axios.post('http://localhost:5000/api/hackathons', hackathonData, config);
+            const response = await axios.post(`${API_BASE_URL}/api/hackathons`, hackathonData, config);
 
             console.log('Hackathon created:', response.data);
             toast.success('Hackathon submitted successfully! It will be visible once approved by the admin.');

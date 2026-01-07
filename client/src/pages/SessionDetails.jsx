@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Clock, Video, MapPin, User, ArrowLeft } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const SessionDetails = () => {
     const { id } = useParams();
@@ -11,7 +12,7 @@ const SessionDetails = () => {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/sessions/${id}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/sessions/${id}`);
                 setSession(data);
                 setLoading(false);
             } catch (error) {

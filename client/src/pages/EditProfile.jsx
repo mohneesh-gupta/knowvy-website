@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { User, Mail, Phone, BookOpen, FileText, Code, Upload, Briefcase } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const EditProfile = () => {
     const { user, setUser, fetchProfile } = useContext(AuthContext);
@@ -106,7 +107,7 @@ const EditProfile = () => {
             }
 
             const { data } = await axios.put(
-                'http://localhost:5000/api/profile',
+                `${API_BASE_URL}/api/profile`,
                 updateData,
                 config
             );

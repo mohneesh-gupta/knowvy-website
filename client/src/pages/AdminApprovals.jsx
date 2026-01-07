@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { CheckCircle, XCircle, Calendar, MapPin, User, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const AdminApprovals = () => {
     const { user } = useContext(AuthContext);
@@ -26,9 +27,9 @@ const AdminApprovals = () => {
             };
 
             const [hackathonsRes, sessionsRes, usersRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/hackathons/admin/pending', config),
-                axios.get('http://localhost:5000/api/sessions/admin/pending', config),
-                axios.get('http://localhost:5000/api/admin/pending-users', config)
+                axios.get(`${API_BASE_URL}/api/hackathons/admin/pending`, config),
+                axios.get(`${API_BASE_URL}/api/sessions/admin/pending`, config),
+                axios.get(`${API_BASE_URL}/api/admin/pending-users`, config)
             ]);
 
             setPendingHackathons(hackathonsRes.data);
@@ -44,7 +45,7 @@ const AdminApprovals = () => {
     const handleApproveUser = async (id) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`http://localhost:5000/api/admin/approve-user/${id}`, {}, config);
+            await axios.put(`${API_BASE_URL}/api/admin/approve-user/${id}`, {}, config);
             toast.success('User approved successfully!');
             fetchPendingItems();
         } catch (error) {
@@ -56,7 +57,7 @@ const AdminApprovals = () => {
         if (window.confirm('Are you sure you want to reject this user? Their account will be deleted.')) {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                await axios.delete(`http://localhost:5000/api/admin/reject-user/${id}`, config);
+                await axios.delete(`${API_BASE_URL}/api/admin/reject-user/${id}`, config);
                 toast.success('User rejected and deleted');
                 fetchPendingItems();
             } catch (error) {
@@ -73,7 +74,7 @@ const AdminApprovals = () => {
                 },
             };
 
-            await axios.put(`http://localhost:5000/api/hackathons/${id}/approve`, {}, config);
+            await axios.put(`${API_BASE_URL}/api/hackathons/${id}/approve`, {}, config);
             toast.success('Hackathon approved successfully!');
             fetchPendingItems();
         } catch (error) {
@@ -90,7 +91,7 @@ const AdminApprovals = () => {
                     },
                 };
 
-                await axios.delete(`http://localhost:5000/api/hackathons/${id}/reject`, config);
+                await axios.delete(`${API_BASE_URL}/api/hackathons/${id}/reject`, config);
                 toast.success('Hackathon rejected and deleted');
                 fetchPendingItems();
             } catch (error) {
@@ -107,7 +108,7 @@ const AdminApprovals = () => {
                 },
             };
 
-            await axios.put(`http://localhost:5000/api/sessions/${id}/approve`, {}, config);
+            await axios.put(`${API_BASE_URL}/api/sessions/${id}/approve`, {}, config);
             toast.success('Session approved successfully!');
             fetchPendingItems();
         } catch (error) {
@@ -124,7 +125,7 @@ const AdminApprovals = () => {
                     },
                 };
 
-                await axios.delete(`http://localhost:5000/api/sessions/${id}/reject`, config);
+                await axios.delete(`${API_BASE_URL}/api/sessions/${id}/reject`, config);
                 toast.success('Session rejected and deleted');
                 fetchPendingItems();
             } catch (error) {

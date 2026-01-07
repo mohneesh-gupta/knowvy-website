@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import API_BASE_URL from "../config/api";
 import {
   Mail,
   Lock,
@@ -303,7 +304,7 @@ const Signup = () => {
         </div>
 
         <a
-          href="http://localhost:5000/api/auth/google"
+          href={`${API_BASE_URL}/api/auth/google`}
           className="flex items-center justify-center gap-3 w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-100 transition-all"
         >
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />

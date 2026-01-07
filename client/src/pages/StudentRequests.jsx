@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Clock, User, MessageSquare, Video, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const StudentRequests = () => {
     const { user } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const StudentRequests = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.get('http://localhost:5000/api/mentorship/my-requests', config);
+            const { data } = await axios.get(`${API_BASE_URL}/api/mentorship/my-requests`, config);
             setRequests(data);
             setLoading(false);
         } catch (error) {

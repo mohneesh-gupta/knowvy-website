@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, MapPin, Globe, User, Clock, CheckCircle } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const HackathonDetails = () => {
     const { id } = useParams();
@@ -11,7 +12,7 @@ const HackathonDetails = () => {
     useEffect(() => {
         const fetchHackathon = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/hackathons/${id}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/hackathons/${id}`);
                 setHackathon(data);
                 setLoading(false);
             } catch (error) {

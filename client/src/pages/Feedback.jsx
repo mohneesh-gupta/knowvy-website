@@ -4,6 +4,7 @@ import AuthContext from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Star, Send } from 'lucide-react';
 import emailjs from "emailjs-com";
+import API_BASE_URL from '../config/api';
 
 const Feedback = () => {
     const { user } = useContext(AuthContext);
@@ -54,7 +55,7 @@ const Feedback = () => {
             // Save to database
             const config = user ? { headers: { Authorization: `Bearer ${user.token}` } } : {};
 
-            await axios.post('http://localhost:5000/api/feedback', {
+            await axios.post(`${API_BASE_URL}/api/feedback`, {
                 name: user?.name || 'Anonymous',
                 email: user?.email || '',
                 rating,

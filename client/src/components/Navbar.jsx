@@ -4,6 +4,7 @@ import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import { Menu, X, User, LogOut, Bell, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const NotificationDropdown = ({ notifications, onMarkRead }) => {
     if (notifications.length === 0) {
@@ -55,7 +56,7 @@ const Navbar = () => {
         const fetchNotifications = async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                const { data } = await axios.get('http://localhost:5000/api/notifications', config);
+                const { data } = await axios.get(`${API_BASE_URL}/api/notifications`, config);
                 setNotifications(data);
                 setUnreadCount(data.filter(n => !n.read).length);
             } catch (error) {
@@ -85,12 +86,12 @@ const Navbar = () => {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
             if (id === 'all') {
-                await axios.put('http://localhost:5000/api/notifications/read-all', {}, config);
+                await axios.put(`${API_BASE_URL}/api/notifications/read-all`, {}, config);
                 setNotifications(prev => prev.map(n => ({ ...n, read: true })));
                 setUnreadCount(0);
                 toast.success('All marked as read');
             } else {
-                await axios.put(`http://localhost:5000/api/notifications/${id}/read`, {}, config);
+                await axios.put(`${API_BASE_URL}/api/notifications/${id}/read`, {}, config);
                 setNotifications(prev => prev.map(n => n._id === id ? ({ ...n, read: true }) : n));
                 setUnreadCount(prev => Math.max(0, prev - 1));
                 if (link) navigate(link);

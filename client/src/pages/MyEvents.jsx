@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Clock, MapPin, User, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const MyEvents = () => {
     const { user } = useContext(AuthContext);
@@ -27,8 +28,8 @@ const MyEvents = () => {
 
             // Fetch user's own events (both approved and pending)
             const [hackathonsRes, sessionsRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/hackathons/user/my', config),
-                axios.get('http://localhost:5000/api/sessions/user/my', config)
+                axios.get(`${API_BASE_URL}/api/hackathons/user/my`, config),
+                axios.get(`${API_BASE_URL}/api/sessions/user/my`, config)
             ]);
 
             setMyHackathons(hackathonsRes.data);

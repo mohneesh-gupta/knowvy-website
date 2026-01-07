@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 import {
     User as UserIcon,
     Phone,
@@ -91,7 +92,7 @@ const CompleteProfile = () => {
             const token = user?.token || localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
 
             const { data } = await axios.post(
-                "http://localhost:5000/api/profile/complete-profile",
+                `${API_BASE_URL}/api/profile/complete-profile`,
                 {
                     role,
                     name: formData.name, // Allow updating name

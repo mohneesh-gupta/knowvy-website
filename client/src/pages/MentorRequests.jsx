@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Clock, User, CheckCircle, XCircle, MessageSquare, Video } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const MentorRequests = () => {
     const { user } = useContext(AuthContext);
@@ -21,7 +22,7 @@ const MentorRequests = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.get('http://localhost:5000/api/mentorship/my-requests', config);
+            const { data } = await axios.get(`${API_BASE_URL}/api/mentorship/my-requests`, config);
             setRequests(data);
             setLoading(false);
         } catch (error) {
@@ -37,7 +38,7 @@ const MentorRequests = () => {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
 
-            await axios.put(`http://localhost:5000/api/mentorship/${requestId}`, {
+            await axios.put(`${API_BASE_URL}/api/mentorship/${requestId}`, {
                 status: 'accepted'
             }, config);
 
@@ -55,7 +56,7 @@ const MentorRequests = () => {
                     headers: { Authorization: `Bearer ${user.token}` }
                 };
 
-                await axios.put(`http://localhost:5000/api/mentorship/${requestId}`, {
+                await axios.put(`${API_BASE_URL}/api/mentorship/${requestId}`, {
                     status: 'rejected',
                     notes: 'Request declined by mentor'
                 }, config);
@@ -75,7 +76,7 @@ const MentorRequests = () => {
                     headers: { Authorization: `Bearer ${user.token}` }
                 };
 
-                await axios.put(`http://localhost:5000/api/mentorship/${requestId}`, {
+                await axios.put(`${API_BASE_URL}/api/mentorship/${requestId}`, {
                     status: 'completed'
                 }, config);
 

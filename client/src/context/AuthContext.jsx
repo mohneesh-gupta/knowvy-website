@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const AuthContext = createContext({
   user: null,
@@ -10,7 +11,7 @@ const AuthContext = createContext({
   fetchProfile: async () => { },
 });
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = API_BASE_URL;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

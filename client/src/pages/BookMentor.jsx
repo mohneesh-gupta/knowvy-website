@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Clock, MessageSquare, Phone, User, Mail, FileText, ArrowLeft } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const BookMentor = () => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ const BookMentor = () => {
     useEffect(() => {
         const fetchMentor = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/mentors/${id}`);
+                const { data } = await axios.get(`${API_BASE_URL}/api/mentors/${id}`);
                 setMentor(data);
                 setLoading(false);
             } catch (error) {
@@ -56,7 +57,7 @@ const BookMentor = () => {
                 }
             };
 
-            await axios.post('http://localhost:5000/api/mentorship', {
+            await axios.post(`${API_BASE_URL}/api/mentorship`, {
                 mentorId: id,
                 type: bookingType,
                 subject: formData.subject,

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import VoiceInput from "../components/voice/VoiceInput";
 import { speak, stopSpeaking, isSpeaking } from "../components/voice/VoiceOutput";
+import API_BASE_URL from "../config/api";
 
 export default function VoiceInterview() {
   const [userText, setUserText] = useState("");
@@ -24,7 +25,7 @@ export default function VoiceInterview() {
     ];
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/chat", {
+      const res = await fetch(`${API_BASE_URL}/api/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages }),

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Clock, Video, MapPin, Search } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const Sessions = () => {
     const [sessions, setSessions] = useState([]);
@@ -11,7 +12,7 @@ const Sessions = () => {
 
     useEffect(() => {
         const fetchSessions = async () => {
-            const { data } = await axios.get('http://localhost:5000/api/sessions');
+            const { data } = await axios.get(`${API_BASE_URL}/api/sessions`);
             setSessions(data);
         };
         fetchSessions();

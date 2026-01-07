@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, Video, Clock, User, FileText, Link as LinkIcon } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const AddSession = () => {
     const { user } = useContext(AuthContext);
@@ -54,7 +55,7 @@ const AddSession = () => {
             },
         };
 
-        await axios.post('http://localhost:5000/api/sessions', {
+        await axios.post(`${API_BASE_URL}/api/sessions`, {
             title,
             speakerName,
             date,

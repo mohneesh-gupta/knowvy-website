@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Users, Calendar, AlertCircle } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const AdminDashboard = () => {
     const { user } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const AdminDashboard = () => {
         const fetchData = async () => {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
             try {
-                const reqs = await axios.get('http://localhost:5000/api/host', config);
+                const reqs = await axios.get(`${API_BASE_URL}/api/host`, config);
                 setRequests(reqs.data);
 
                 // Mock stats for now as we don't have a stats endpoint yet

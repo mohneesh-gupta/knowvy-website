@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { FiSend, FiArrowDown, FiLoader, FiStopCircle } from "react-icons/fi";
+import API_BASE_URL from "../config/api";
 
 export default function Chat() {
   const [input, setInput] = useState("");
@@ -56,7 +57,7 @@ export default function Chat() {
     abortControllerRef.current = new AbortController();
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/stream", {
+      const res = await fetch(`${API_BASE_URL}/api/ai/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Search, Briefcase, Calendar, Linkedin } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const Mentorship = () => {
     const [mentors, setMentors] = useState([]);
@@ -11,7 +12,7 @@ const Mentorship = () => {
 
     useEffect(() => {
         const fetchMentors = async () => {
-            const { data } = await axios.get('http://localhost:5000/api/mentors');
+            const { data } = await axios.get(`${API_BASE_URL}/api/mentors`);
             setMentors(data);
             setLoading(false);
         };

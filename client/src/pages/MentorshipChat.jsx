@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Send, ArrowLeft, User, Video, Phone, CheckCircle, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
+import API_BASE_URL from '../config/api';
 
 const MentorshipChat = () => {
     const { requestId } = useParams();
@@ -52,7 +53,7 @@ const MentorshipChat = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.get('http://localhost:5000/api/mentorship/my-requests', config);
+            const { data } = await axios.get(`${API_BASE_URL}/api/mentorship/my-requests`, config);
             const foundRequest = data.find(r => r._id === requestId);
 
             if (!foundRequest) {
@@ -81,7 +82,7 @@ const MentorshipChat = () => {
             const config = {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
-            const { data } = await axios.get(`http://localhost:5000/api/chat/${requestId}`, config);
+            const { data } = await axios.get(`${API_BASE_URL}/api/chat/${requestId}`, config);
             setMessages(data);
             setLoading(false);
         } catch (error) {
@@ -101,7 +102,7 @@ const MentorshipChat = () => {
                 headers: { Authorization: `Bearer ${user.token}` }
             };
 
-            const { data } = await axios.post(`http://localhost:5000/api/chat/${requestId}`, {
+            const { data } = await axios.post(`${API_BASE_URL}/api/chat/${requestId}`, {
                 message: newMessage
             }, config);
 

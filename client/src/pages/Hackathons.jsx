@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Calendar, MapPin, ArrowRight, Filter, SlidersHorizontal } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const Hackathons = () => {
     const { user } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Hackathons = () => {
 
     useEffect(() => {
         const fetchHackathons = async () => {
-            const { data } = await axios.get('http://localhost:5000/api/hackathons');
+            const { data } = await axios.get(`${API_BASE_URL}/api/hackathons`);
             setHackathons(data);
             setLoading(false);
         };
