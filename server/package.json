@@ -1,8 +1,12 @@
 {
   "name": "knowvy-backend",
   "version": "1.0.0",
+  "description": "Knowvy backend API",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
@@ -12,7 +16,7 @@
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.3",

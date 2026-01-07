@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import session from 'express-session';
 import passport from 'passport';
-import configurePassport from './config/passport.js';
 
 import connectDB from './config/db.js';
+import configurePassport from './config/passport.js';
 import errorHandler from './middleware/errorMiddleware.js';
 
 // Routes
@@ -23,33 +23,54 @@ import mentorshipRoutes from './routes/mentorshipRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
 
+/* ======================
+   ENV & DB
+   ====================== */
 dotenv.config();
 connectDB();
-configurePassport(); // Setup passport strategies
+configurePassport();
 
+/* ======================
+   APP INIT
+   ====================== */
 const app = express();
 
 /* ======================
    GLOBAL MIDDLEWARE
    ====================== */
-app.use(cors());
+
+// ✅ CORS (REQUIRED for Netlify + Render + Cookies)
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+  })
+);
+
+// Body parsers
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Session middleware (Required for Passport)
+/* ======================
+   SESSION (REQUIRED FOR PASSPORT)
+   ====================== */
 app.use(
-   session({
-      secret: process.env.SESSION_SECRET || 'dev_secret_key', // Make sure to adding this to .env
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-         secure: process.env.NODE_ENV === 'production', // Secure cookies in production
-         maxAge: 24 * 60 * 60 * 1000 // 24 hours
-      }
-   })
+  session({
+    name: 'knowvy.sid',
+    secret: process.env.SESSION_SECRET || 'dev_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
+      sameSite: 'none', // REQUIRED for cross-site cookies
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  })
 );
 
-// Passport middleware
+/* ======================
+   PASSPORT
+   ====================== */
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -57,7 +78,7 @@ app.use(passport.session());
    ROUTES
    ====================== */
 app.use('/api/auth', authRoutes);
-app.use('/api/profile', profileRoutes); // Profile routes mounted here
+app.use('/api/profile', profileRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/tts', ttsRoutes);
 app.use('/api/hackathons', hackathonRoutes);
@@ -71,19 +92,19 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
 /* ======================
-   ROOT ROUTE
+   ROOT
    ====================== */
 app.get('/', (req, res) => {
-   res.send('API is running...');
+  res.send('API is running...');
 });
 
 /* ======================
-   404 HANDLER (REQUIRED)
+   404 HANDLER
    ====================== */
 app.use((req, res, next) => {
-   const error = new Error(`Not Found - ${req.originalUrl}`);
-   res.status(404);
-   next(error);
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  res.status(404);
+  next(error);
 });
 
 /* ======================
@@ -96,6 +117,6 @@ app.use(errorHandler);
    ====================== */
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () =>
-   console.log(`Server running on port ${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
