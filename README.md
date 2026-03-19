@@ -70,17 +70,19 @@ VITE_SERVER_URL=http://localhost:5000
 
 ## Installation
 
+Run these commands from the repository root.
+
 ### Backend
 
 ```bash
-cd /home/runner/work/knowvy-website/knowvy-website/server
+cd server
 npm install
 ```
 
 ### Frontend
 
 ```bash
-cd /home/runner/work/knowvy-website/knowvy-website/client
+cd client
 npm install
 ```
 
@@ -93,14 +95,14 @@ Open two terminals.
 ### Terminal 1: Start Backend
 
 ```bash
-cd /home/runner/work/knowvy-website/knowvy-website/server
+cd server
 npm run start
 ```
 
 ### Terminal 2: Start Frontend
 
 ```bash
-cd /home/runner/work/knowvy-website/knowvy-website/client
+cd client
 npm run dev
 ```
 
